@@ -948,7 +948,13 @@
 
 <script>
   if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; }
-  function forceTop(){ if (!location.hash && window.scrollY > 0) { window.scrollTo(0, 0); } }
+  // Ignoramos qualquer #hash de âncora aqui de propósito: cliques no menu
+  // (que usam #produto, #automacao etc.) navegam na mesma página sem
+  // disparar load/DOMContentLoaded/pageshow de novo, então forçar o topo
+  // nesses eventos não atrapalha a navegação por âncora — só corrige uma
+  // aba reaberta/restaurada que ficou com hash e rolagem de uma visita
+  // anterior.
+  function forceTop(){ if (window.scrollY > 0) { window.scrollTo(0, 0); } }
   forceTop();
   window.addEventListener("pageshow", forceTop);
   document.addEventListener("DOMContentLoaded", forceTop);
