@@ -73,7 +73,7 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; max-width:100%; overflow-x:hidden; font-size:18px;}
+  html{scroll-behavior:smooth; max-width:100%; overflow-x:hidden; font-size:18px; -webkit-text-size-adjust:100%; text-size-adjust:100%;}
   body{
     margin:0;
     font-family:var(--sans);
@@ -134,7 +134,7 @@
   }
 
   /* ---------------- hero ---------------- */
-  .hero{padding:4.2rem 0 3.6rem; position:relative;}
+  .hero{padding-top:4.2rem; padding-bottom:3.6rem; position:relative;}
   .hero-grid{
     display:grid; grid-template-columns:1.15fr 0.85fr; gap:3rem; align-items:center;
   }
@@ -948,5 +948,8 @@
 
 <script>
   if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; }
-  if (!location.hash) { window.scrollTo(0, 0); }
+  function forceTop(){ if (!location.hash) { window.scrollTo(0, 0); } }
+  forceTop();
+  window.addEventListener("pageshow", forceTop);
+  document.addEventListener("DOMContentLoaded", forceTop);
 </script>
