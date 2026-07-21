@@ -1,0 +1,1002 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SISCAP — Sistema de Captação Territorial</title>
+<meta name="description" content="Sistema completo de captação territorial para campanhas 2026: landing page própria, automação com Google Sheets e grupos de WhatsApp organizados por região, cidade e bairro.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://siscap-proposito.pages.dev/">
+<meta property="og:title" content="SISCAP — Sistema de Captação Territorial">
+<meta property="og:description" content="Landing page própria, automação com Google Sheets e grupos de WhatsApp organizados por região, cidade e bairro — compliance eleitoral e LGPD já validados.">
+<meta property="og:image" content="https://siscap-proposito.pages.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SISCAP — Sistema de Captação Territorial">
+<meta name="twitter:description" content="Landing page própria, automação com Google Sheets e grupos de WhatsApp organizados por região, cidade e bairro — compliance eleitoral e LGPD já validados.">
+<meta name="twitter:image" content="https://siscap-proposito.pages.dev/assets/og-image.png">
+
+<style>
+  :root{
+    --paper:#F6F5F1;
+    --paper-raised:#FFFFFF;
+    --ink:#14171C;
+    --ink-soft:#565B66;
+    --ink-faint:#8A8F99;
+    --line: rgba(20,23,28,0.12);
+    --accent:#1E7A46;
+    --accent-soft: rgba(30,122,70,0.12);
+    --gold:#C6941F;
+    --gold-soft: rgba(198,148,31,0.14);
+    --navy:#1B2A4C;
+    --navy-soft: rgba(27,42,76,0.10);
+    --danger:#B23A2E;
+    --deep:#14171C;
+    --deep-text: rgba(242,241,236,0.72);
+    --pale:#FFFFFF;
+    --pale-ink:#14171C;
+    --pale-faint:#8A8F99;
+    --logo-ink:#0f1e2e;
+    --radius: 14px;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1114;
+    --paper-raised:#181B20;
+    --ink:#F0EFEA;
+    --ink-soft:#B6BAC2;
+    --ink-faint:#767C87;
+    --line: rgba(240,239,234,0.14);
+    --accent:#3FA872;
+    --accent-soft: rgba(63,168,114,0.16);
+    --gold:#E3B94E;
+    --gold-soft: rgba(227,185,78,0.14);
+    --navy:#7C8FC2;
+    --navy-soft: rgba(124,143,194,0.14);
+    --logo-ink:#F2F1EC;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0F1114;
+      --paper-raised:#181B20;
+      --ink:#F0EFEA;
+      --ink-soft:#B6BAC2;
+      --ink-faint:#767C87;
+      --line: rgba(240,239,234,0.14);
+      --accent:#3FA872;
+      --accent-soft: rgba(63,168,114,0.16);
+      --gold:#E3B94E;
+      --gold-soft: rgba(227,185,78,0.14);
+      --navy:#7C8FC2;
+      --navy-soft: rgba(124,143,194,0.14);
+      --logo-ink:#F2F1EC;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:var(--sans); margin:0; text-wrap:balance; letter-spacing:-0.01em;}
+  p{margin:0;}
+  a{color:inherit;}
+  ::selection{background:var(--gold-soft); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  img{max-width:100%; display:block;}
+
+  .wrap{max-width:74rem; margin:0 auto; padding-left:1.6rem; padding-right:1.6rem;}
+  .wrap-narrow{max-width:46rem; margin:0 auto; padding-left:1.6rem; padding-right:1.6rem;}
+
+  .eyebrow{
+    font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+    font-weight:800; color:var(--accent); display:flex; align-items:center; gap:0.5rem;
+  }
+  .eyebrow::before{content:""; width:1.6rem; height:2px; background:var(--accent); display:inline-block;}
+
+  section{padding:5rem 0;}
+  @media (max-width:720px){ section{padding:3.2rem 0;} }
+
+  /* ---------------- nav ---------------- */
+  .topnav{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topnav-inner{
+    max-width:74rem; margin:0 auto; padding:0.9rem 1.6rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .topnav .brand{font-weight:800; font-size:0.92rem; letter-spacing:0.02em; display:flex; align-items:center;}
+  .topnav .brand span{color:var(--accent);}
+  .brand-logo-svg{height:1.55rem; width:auto; display:block;}
+  .product-badge{
+    display:inline-flex; align-items:center; gap:0.4rem; margin-left:0.9rem; padding:0.3rem 0.65rem;
+    border-radius:99px; border:1px solid var(--line); font-size:0.68rem; font-weight:800;
+    letter-spacing:0.04em; color:var(--accent); background:var(--accent-soft); white-space:nowrap;
+  }
+  .product-badge b{font-weight:800;}
+  .topnav-links{display:flex; gap:1.4rem; font-size:0.8rem; color:var(--ink-soft); font-weight:600;}
+  .topnav-links a{text-decoration:none;}
+  .topnav-links a:hover{color:var(--ink);}
+  @media (max-width:760px){ .topnav-links{display:none;} }
+
+  /* ---------------- hero ---------------- */
+  .hero{padding:4.2rem 0 3.6rem; position:relative;}
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:3rem; align-items:center;
+  }
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
+  .hero h1{
+    font-size:clamp(2.2rem,4.6vw,3.6rem); font-weight:800; line-height:1.04; margin-top:0.9rem;
+  }
+  .hero h1 .hl{ box-shadow: inset 0 -0.34em 0 var(--gold-soft); }
+  .hero .lede{
+    font-family:var(--serif); font-size:1.18rem; color:var(--ink-soft); margin-top:1.3rem; max-width:36rem; line-height:1.55;
+  }
+  .hero-tags{display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1.6rem;}
+  .tag{
+    font-size:0.74rem; font-weight:700; padding:0.4rem 0.75rem; border-radius:99px;
+    border:1px solid var(--line); color:var(--ink-soft); background:var(--paper-raised);
+  }
+  .hero-photo{
+    position:relative; border-radius:18px; overflow:hidden;
+    box-shadow:0 30px 60px -28px rgba(20,23,28,0.35);
+    aspect-ratio: 4/5;
+  }
+  .hero-photo img{width:100%; height:100%; object-fit:cover;}
+  .hero-photo::after{
+    content:"Renata Salgado · pré-candidata a deputada estadual (exemplo fictício)";
+    position:absolute; left:0; right:0; bottom:0; padding:1rem 1.1rem;
+    font-size:0.72rem; font-weight:700; color:#fff; letter-spacing:0.02em;
+    background:linear-gradient(0deg, rgba(0,0,0,0.65), transparent);
+  }
+
+  /* ---------------- section headers ---------------- */
+  .sec-head{max-width:40rem; margin-bottom:2.6rem;}
+  .sec-head h2{font-size:clamp(1.6rem,3vw,2.3rem); font-weight:800; margin-top:0.7rem;}
+  .sec-head p{font-family:var(--serif); color:var(--ink-soft); margin-top:0.9rem; font-size:1.05rem; line-height:1.6;}
+
+  /* ---------------- dark band ---------------- */
+  .band-dark{
+    background:var(--ink); color:#F2F1EC;
+  }
+  :root[data-theme="dark"] .band-dark, :root:not([data-theme="light"]) .band-dark{ background:#000; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .band-dark{ background:#000; } }
+  .band-dark .eyebrow{color:var(--gold);}
+  .band-dark .eyebrow::before{background:var(--gold);}
+  .band-dark .sec-head p{color:rgba(242,241,236,0.72);}
+  .band-dark h2{color:#fff;}
+
+  /* ---------------- mockup chrome (browser + phone) ---------------- */
+  .device-row{display:grid; grid-template-columns:1.5fr 1fr; gap:2rem; align-items:start;}
+  @media (max-width:860px){ .device-row{grid-template-columns:1fr;} }
+
+  .browser-frame{
+    background:#0d0e10; border-radius:16px; padding:0.6rem; box-shadow:0 40px 80px -36px rgba(0,0,0,0.5);
+  }
+  .browser-bar{display:flex; align-items:center; gap:0.4rem; padding:0.5rem 0.7rem 0.7rem;}
+  .browser-dot{width:9px; height:9px; border-radius:50%; background:#4b4d52;}
+  .browser-url{
+    flex:1; margin-left:0.6rem; background:#1c1d20; border-radius:7px; padding:0.32rem 0.8rem;
+    font-size:0.72rem; color:#9a9da3; font-family:ui-monospace,monospace;
+  }
+  .browser-screen{background:#fff; border-radius:10px; overflow:hidden;}
+
+  /* recreated LP UI, using the real product's own palette */
+  .lp-mock{
+    --g:#009C3B; --gd:#006B29; --b:#002776; --y:#FFDF00;
+    font-family:var(--sans); color:#17181B;
+  }
+  .lp-topbar{background:#17181B; display:flex; align-items:center; justify-content:center; padding:0.6rem;}
+  .lp-topbar svg{height:1.7rem; width:auto;}
+  .lp-hero{padding:1.3rem 1.2rem 1.6rem; display:grid; grid-template-columns:1.05fr 0.95fr; gap:1.2rem; align-items:start;}
+  @media (max-width:520px){ .lp-hero{grid-template-columns:1fr;} }
+  .lp-eyebrow{font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:800; color:var(--gd);}
+  .lp-hero h3{font-size:1.05rem; font-weight:800; line-height:1.15; margin-top:0.35rem;}
+  .lp-hero h3 mark{background:linear-gradient(180deg,transparent 60%, rgba(255,223,0,0.6) 60%); color:inherit; padding:0;}
+  .lp-hero p{font-size:0.68rem; color:#5A5D63; margin-top:0.55rem; line-height:1.4;}
+  .lp-form{margin-top:0.9rem; background:#F6F6F4; border:1px solid rgba(23,24,27,0.11); border-radius:8px; padding:0.8rem;}
+  .lp-field{margin-bottom:0.55rem;}
+  .lp-field label{display:block; font-size:0.55rem; font-weight:700; margin-bottom:0.2rem;}
+  .lp-field .in{
+    border:1px solid rgba(23,24,27,0.15); border-radius:5px; padding:0.4rem 0.55rem; font-size:0.62rem; background:#fff; color:#8A8F99;
+  }
+  .lp-field .in.filled{color:#17181B;}
+  .lp-field .in.ro{background:#ECECE6; color:#5A5D63;}
+  .lp-field .in.hl{border-color:#009C3B; background:#fff; color:#17181B; font-weight:600;}
+  .lp-check{display:flex; gap:0.35rem; font-size:0.5rem; color:#5A5D63; margin:0.5rem 0 0.6rem; line-height:1.35;}
+  .lp-check .box{width:0.55rem; height:0.55rem; border:1px solid rgba(23,24,27,0.3); border-radius:2px; flex-shrink:0; margin-top:0.1rem;}
+  .lp-btn{background:#009C3B; color:#fff; font-weight:800; font-size:0.66rem; text-align:center; padding:0.5rem; border-radius:5px;}
+  .lp-photo{border-radius:10px; overflow:hidden; aspect-ratio:1/1;}
+  .lp-photo img{width:100%; height:100%; object-fit:cover;}
+  .lp-imbat{background:#141519; padding:1.5rem 1.2rem; text-align:center;}
+  .lp-imbat h4{color:#FFDF00; font-size:0.92rem; font-weight:800; text-transform:uppercase; letter-spacing:-0.01em;}
+  .lp-imbat-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; margin-top:0.9rem;}
+  .lp-imbat-card{background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:8px; padding:0.7rem 0.4rem; border-top:2px solid var(--c);}
+  .lp-imbat-card svg{width:16px; height:16px; margin:0 auto; display:block; color:var(--c);}
+  .lp-imbat-card p{color:rgba(255,255,255,0.82); font-size:0.5rem; margin-top:0.4rem; line-height:1.25;}
+
+  .caption-row{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-top:0.9rem;}
+  .caption-row .cap{font-size:0.78rem; color:var(--ink-soft); font-weight:600;}
+  .caption-row .cap b{color:var(--ink);}
+  .status-live{
+    display:inline-flex; align-items:center; gap:0.4rem; font-size:0.68rem; font-weight:700; color:var(--accent);
+  }
+  .status-live::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+
+  /* phone frame */
+  .phone-frame{
+    background:#0d0e10; border-radius:34px; padding:0.55rem;
+    box-shadow:0 40px 80px -36px rgba(0,0,0,0.5);
+    max-width:15.5rem; margin:0 auto;
+  }
+  .phone-screen{background:#fff; border-radius:24px; overflow:hidden; position:relative;}
+  .phone-screen.phone-scroll{height:30rem; overflow-y:auto;}
+  .phone-notch{
+    position:absolute; top:0; left:50%; transform:translateX(-50%); width:34%; height:16px;
+    background:#0d0e10; border-radius:0 0 10px 10px; z-index:2;
+  }
+  .lp-photo-mobile{aspect-ratio:16/11; border-radius:12px;}
+
+  .og-illustration{
+    width:100%; height:100%; position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 18% 20%, rgba(0,156,59,0.85), transparent 55%),
+      radial-gradient(circle at 85% 30%, rgba(0,39,118,0.8), transparent 55%),
+      radial-gradient(circle at 45% 90%, rgba(255,223,0,0.55), transparent 55%),
+      #14171C;
+    display:flex; flex-direction:column; justify-content:center; padding:0.5rem 0.7rem;
+  }
+  .og-illustration-logo{color:#fff; font-weight:300; font-size:0.62rem; letter-spacing:0.08em; line-height:1.25;}
+  .og-illustration-logo b{font-weight:800; letter-spacing:0.01em;}
+  .og-illustration-tag{color:#fff; font-weight:800; font-size:0.78rem; margin-top:0.3rem;}
+  .og-illustration-tag mark{background:linear-gradient(180deg,transparent 60%, rgba(255,223,0,0.65) 60%); color:inherit; padding:0;}
+
+  /* whatsapp mock */
+  .wa-mock{font-family:var(--sans); background:#e9ddcf; padding-top:16px;}
+  :root[data-theme="dark"] .wa-mock, :root:not([data-theme="light"]) .wa-mock{background:#0b141a;}
+  .wa-bar{background:#128C7E; color:#fff; padding:0.55rem 0.7rem; display:flex; align-items:center; gap:0.5rem;}
+  .wa-bar .ava{width:1.7rem; height:1.7rem; border-radius:50%; background:#0d6b5f; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:800;}
+  .wa-bar .meta b{display:block; font-size:0.72rem;}
+  .wa-bar .meta span{display:block; font-size:0.56rem; opacity:0.85;}
+  .wa-body{padding:0.7rem 0.6rem; min-height:9rem;}
+  .wa-msg{
+    background:#fff; border-radius:7px 7px 7px 2px; padding:0.45rem 0.6rem; font-size:0.62rem;
+    max-width:88%; box-shadow:0 1px 1px rgba(0,0,0,0.08); margin-bottom:0.5rem; color:#111;
+  }
+  .wa-msg.sys{background:#d9fdd3; margin:0 auto 0.6rem; text-align:center; font-size:0.55rem; color:#3a4a3d; max-width:92%;}
+  .wa-msg .time{display:block; text-align:right; font-size:0.5rem; color:#8b8f94; margin-top:0.2rem;}
+  .wa-msg.link-card{max-width:82%; padding:0; overflow:hidden; margin-left:auto; background:#d9fdd3;}
+  .wa-msg.link-card .og-img{width:100%; aspect-ratio:1200/630; overflow:hidden;}
+  .wa-msg.link-card .og-img img{width:100%; height:100%; object-fit:cover;}
+  .wa-msg.link-card .og-body{padding:0.5rem 0.6rem;}
+  .wa-msg.link-card .og-title{font-weight:700; font-size:0.66rem; color:#111;}
+  .wa-msg.link-card .og-desc{font-size:0.58rem; color:#4a4a4a; margin-top:0.15rem; line-height:1.35;}
+  .wa-msg.link-card .og-url{
+    display:flex; align-items:center; gap:0.25rem; font-size:0.55rem; color:#6b7280;
+    text-transform:uppercase; letter-spacing:0.02em; margin-top:0.35rem;
+  }
+  .wa-msg.link-card .og-url svg{width:10px; height:10px;}
+
+  /* ---------------- how it works / flow ---------------- */
+  .flow{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative;
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--paper-raised);
+  }
+  @media (max-width:860px){ .flow{grid-template-columns:1fr;} }
+  .flow-step{padding:1.6rem 1.4rem; position:relative; border-right:1px solid var(--line);}
+  .flow-step:last-child{border-right:none;}
+  @media (max-width:860px){ .flow-step{border-right:none; border-bottom:1px solid var(--line);} .flow-step:last-child{border-bottom:none;} }
+  .flow-num{font-family:var(--serif); font-style:italic; font-size:0.9rem; color:var(--ink-faint);}
+  .flow-step h4{font-size:0.98rem; font-weight:800; margin-top:0.5rem;}
+  .flow-step p{font-size:0.82rem; color:var(--ink-soft); margin-top:0.5rem; line-height:1.5;}
+  .flow-step .ic{width:28px; height:28px; color:var(--accent);}
+
+  /* ---------------- benefit grid ---------------- */
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem;}
+  @media (max-width:820px){ .grid-3{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .grid-3{grid-template-columns:1fr;} }
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;}
+  @media (max-width:640px){ .grid-2{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:1.5rem;
+  }
+  .card .ic{width:26px; height:26px; color:var(--accent); margin-bottom:0.9rem;}
+  .card h4{font-size:1rem; font-weight:800;}
+  .card p{font-size:0.86rem; color:var(--ink-soft); margin-top:0.55rem; line-height:1.5;}
+
+  /* ---------------- stat row ---------------- */
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:1.4rem;}
+  @media (max-width:760px){ .stat-row{grid-template-columns:1fr 1fr;} }
+  .stat{border-top:2px solid var(--gold); padding-top:0.8rem;}
+  .stat .n{font-size:2.1rem; font-weight:800; font-variant-numeric:tabular-nums; line-height:1;}
+  .stat .l{font-size:0.78rem; color:var(--ink-soft); margin-top:0.5rem; line-height:1.4;}
+
+  /* ---------------- region map illustration ---------------- */
+  .region-panel{
+    display:grid; grid-template-columns:1fr 1fr; gap:2.4rem; align-items:center;
+  }
+  @media (max-width:860px){ .region-panel{grid-template-columns:1fr;} }
+  .region-viz{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:1.6rem;
+  }
+  .region-list{display:flex; flex-wrap:wrap; gap:0.4rem;}
+  .region-chip{
+    font-size:0.68rem; font-weight:700; padding:0.32rem 0.6rem; border-radius:6px;
+    background:var(--accent-soft); color:var(--accent); border:1px solid transparent;
+  }
+  .region-chip.n2{background:var(--navy-soft); color:var(--navy);}
+  .region-chip.n3{background:var(--gold-soft); color:var(--gold);}
+  .region-chip.poa{background:var(--ink); color:#fff;}
+
+  /* ---------------- sheet mockup ---------------- */
+  .sheet-frame{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    box-shadow:0 30px 60px -34px rgba(20,23,28,0.3);
+  }
+  .sheet-bar{
+    display:flex; align-items:center; gap:0.6rem; padding:0.7rem 1rem; border-bottom:1px solid var(--line); background:var(--paper);
+  }
+  .sheet-bar .g{width:18px; height:18px; border-radius:4px; background:#0F9D58; flex-shrink:0;}
+  .sheet-bar b{font-size:0.82rem;}
+  .sheet-bar span{font-size:0.72rem; color:var(--ink-faint);}
+  .sheet-table{width:100%; border-collapse:collapse; font-size:0.76rem;}
+  .sheet-table th{
+    text-align:left; font-weight:700; color:var(--ink-soft); background:var(--paper);
+    padding:0.55rem 0.8rem; border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+    white-space:nowrap; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.03em;
+  }
+  .sheet-table td{
+    padding:0.5rem 0.8rem; border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+    color:var(--ink); white-space:nowrap; font-variant-numeric:tabular-nums;
+  }
+  .sheet-table tr td:first-child, .sheet-table tr th:first-child{color:var(--ink-faint); font-size:0.7rem;}
+  .sheet-wrap-scroll{overflow-x:auto;}
+  .sheet-note{padding:0.7rem 1rem; font-size:0.72rem; color:var(--ink-faint); border-top:1px solid var(--line);}
+
+  /* ---------------- compliance ---------------- */
+  .compliance-list{display:flex; flex-direction:column; gap:1rem;}
+  .compliance-item{
+    display:flex; gap:0.9rem; align-items:flex-start; padding:1.1rem 1.2rem; border:1px solid rgba(20,23,28,0.1);
+    border-radius:10px; background:var(--pale);
+  }
+  .compliance-item .ic{width:20px; height:20px; color:var(--accent); flex-shrink:0; margin-top:0.15rem;}
+  .compliance-item h5{font-size:0.92rem; font-weight:800; color:var(--pale-ink);}
+  .compliance-item p{font-size:0.82rem; color:var(--pale-faint); margin-top:0.3rem; line-height:1.5;}
+
+  /* ---------------- deliverables checklist ---------------- */
+  .check-table{width:100%; border-collapse:collapse;}
+  .check-table td{padding:0.85rem 0; border-bottom:1px solid var(--line); font-size:0.9rem; vertical-align:top;}
+  .check-table tr:last-child td{border-bottom:none;}
+  .check-table .yes{width:2.2rem;}
+  .check-table .yes span{
+    display:inline-flex; width:1.4rem; height:1.4rem; border-radius:50%; background:var(--accent-soft); color:var(--accent);
+    align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;
+  }
+  .check-table .lab b{display:block;}
+  .check-table .lab small{color:var(--ink-soft); font-size:0.8rem;}
+
+  /* ---------------- pricing / offer ---------------- */
+  .offer-card{
+    background:var(--deep); color:#F2F1EC; border-radius:20px; padding:2.6rem;
+    display:grid; grid-template-columns:1.2fr 1fr; gap:2.4rem; align-items:center;
+  }
+  @media (max-width:860px){ .offer-card{grid-template-columns:1fr;} }
+  .offer-card h3{font-size:1.5rem; font-weight:800; color:#fff;}
+  .offer-card p{color:rgba(242,241,236,0.72); margin-top:0.8rem; font-size:0.95rem; line-height:1.6; font-family:var(--serif);}
+  .offer-list{display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem;}
+  .offer-list div{display:flex; gap:0.6rem; font-size:0.86rem; color:rgba(242,241,236,0.88);}
+  .offer-list .ic{width:16px; height:16px; color:var(--gold); flex-shrink:0; margin-top:0.15rem;}
+  .offer-cta{background:var(--pale); border-radius:14px; padding:1.6rem; color:var(--pale-ink);}
+  .offer-cta .price-label{font-size:0.74rem; font-weight:700; color:var(--pale-faint); text-transform:uppercase; letter-spacing:0.05em;}
+  .offer-cta .price{font-size:1.85rem; font-weight:800; margin-top:0.35rem; font-variant-numeric:tabular-nums; color:var(--pale-ink);}
+  .offer-cta .price-sub{font-size:0.82rem; color:var(--pale-faint); margin-top:0.4rem; line-height:1.45;}
+  .price-asterisk{color:var(--gold); font-weight:800;}
+  .offer-cta .btn{
+    display:block; text-align:center; margin-top:1.1rem; background:var(--accent); color:#fff; font-weight:800;
+    padding:0.85rem; border-radius:8px; font-size:0.92rem; text-decoration:none;
+  }
+  .offer-cta .fine{font-size:0.72rem; color:var(--pale-faint); margin-top:0.7rem; text-align:center;}
+
+  footer{padding:2.6rem 0; border-top:1px solid var(--line);}
+  footer .footer-inner{display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; font-size:0.78rem; color:var(--ink-faint);}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important; scroll-behavior:auto !important;} }
+</style>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><svg class="brand-logo-svg" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2532.87 230.08">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: var(--logo-ink, #0f1e2e);
+      }
+    </style>
+  </defs>
+  <g data-name="Camada 1">
+    <g>
+      <g>
+        <path class="cls-1" d="M109.62,191.47c1.6.11,3.2.16,4.8.16,13.38,0,26.5-3.72,38.21-10.87l1.6-.97-5.04-5.94-1.16.69c-11.61,6.87-24.71,10.03-37.88,9.16-38.05-2.52-66.81-37.61-64.11-78.22.88-13.26,5.1-26.04,12.21-36.98l.65-1-5.08-5.98-1.18,1.76c-8.22,12.29-13.1,26.71-14.09,41.71-2.97,44.89,28.92,83.7,71.09,86.49Z"/>
+        <path class="cls-1" d="M111.61,161.42c1.03.07,2.05.1,3.07.1,5.94,0,11.77-1.15,17.39-3.44l5.12-2.08-11.23-13.22-2.51.75c-3.56,1.07-7.16,1.5-10.73,1.26-17.84-1.18-31.32-17.73-30.05-36.89.23-3.52.98-7.01,2.21-10.36l.81-2.19-11.49-13.54-2.65,5.63c-2.86,6.09-4.54,12.61-4.99,19.38-.91,13.66,3.25,26.85,11.71,37.16,8.52,10.38,20.36,16.57,33.33,17.43Z"/>
+        <g>
+          <path class="cls-1" d="M194.42,43.23l-.64-.86-8.15,2.06,1.49,1.93c16.24,21.04,24.2,47.62,22.39,74.82-1.74,26.24-12.49,50.88-30.28,69.38l-1.01,1.05,5.05,5.85,1.22-1.26c19.09-19.79,30.64-46.25,32.51-74.52,1.88-28.41-6.14-56.27-22.59-78.45Z"/>
+          <path class="cls-1" d="M44.58,34.1C64.74,15.52,90.35,6.28,116.7,8c21.87,1.45,42.17,10.28,58.7,25.53l1.98,1.83,2.15-8.54-.73-.65C161.39,10.72,140.09,1.75,117.22.23c-28.47-1.91-56.1,8.09-77.75,28.11l-1.14,1.05,5.04,5.84,1.21-1.12Z"/>
+          <path class="cls-1" d="M162.43,170.85l3.82,4.43c26.09-28.25,30.68-71.57,12.03-104.7l-1.73,7.17-1.7,7.02-2.32,9.62c6.7,23.92,1.14,50.77-15.94,69.67l2.94,3.41,2.9,3.36Z"/>
+          <path class="cls-1" d="M64.36,57.12l2.92,3.39c18.61-16.12,43.08-19.92,64.27-11.96l8.47-2.32,6.33-1.73,6.55-1.79c-28.86-19.69-67.58-17.93-95.28,6.6l3.84,4.46,2.9,3.36Z"/>
+          <path class="cls-1" d="M144.61,125.1c-1.61,5.88-4.48,11.15-8.25,15.52l5.49,6.37c4.97-5.59,8.73-12.44,10.72-20.11,0,.18,4.01-15.58,8.41-32.97l2.37-9.42,1.84-7.31.7-2.79,1.11-4.39,1.41-5.62,1.52-6.03,2.23-8.84h0l-8.39,2.12-5.73,1.45-5.33,1.35-5.85,1.48-.98.25-1.11.28-7.73,1.95s.01,0,.02,0h-.02c-19.73,5.26-39.9,11.24-39.41,11.2-5.58,1.78-10.72,4.71-15.2,8.52l5.1,5.9c3.8-3.13,8.18-5.49,12.91-6.86l-.02-.02,52.21-15.51,9.86-2.76-15.87,58.76s-1.63,6.1-2.01,7.5Z"/>
+        </g>
+        <path class="cls-1" d="M169.89,200.71l-3.93-4.63c-39.98,29.77-95.35,23.56-127.92-16.12-31.85-38.81-31.07-96.42-.2-134.78l-2-2.36-2.94-3.46-4.71-5.55C11.84,53.39,2.04,77.96.28,104.43c-2.09,31.54,7.46,61.96,26.91,85.64,19.45,23.69,46.45,37.82,76.04,39.78,26.08,1.73,51.4-6.18,72.38-22.39l-2.78-3.27-2.95-3.48Z"/>
+      </g>
+      <g>
+        <path class="cls-1" d="M2029.42,52.51h6.45v43.41h-6.45v-43.41Z"/>
+        <path class="cls-1" d="M2050.7,52.51h6.51l26.42,33.67v-33.67h5.46v43.41h-3.22l-29.71-37.77v37.77h-5.46v-43.41Z"/>
+        <path class="cls-1" d="M2115.69,55.49h-18.36v-2.98h43.1v2.98h-18.29v40.44h-6.45v-40.44Z"/>
+        <path class="cls-1" d="M2148.68,52.51h36.77v2.98h-30.32v15.69h26.79v2.91h-26.79v18.85h30.32v2.98h-36.77v-43.41Z"/>
+        <path class="cls-1" d="M2194.88,52.51h6.45v40.43h27.29v2.98h-33.74v-43.41Z"/>
+        <path class="cls-1" d="M2239.97,52.51h6.45v43.41h-6.45v-43.41Z"/>
+        <path class="cls-1" d="M2271.16,93.91c-3.6-1.76-6.35-4.31-8.25-7.66-1.9-3.35-2.85-7.34-2.85-11.97s.93-8.62,2.79-11.97c1.86-3.35,4.55-5.92,8.06-7.72,3.51-1.8,7.69-2.7,12.53-2.7,5.87,0,10.7,1.27,14.48,3.81,3.78,2.54,6.07,6.05,6.85,10.51h-5.58c-.74-3.64-2.46-6.44-5.15-8.4-2.69-1.96-6.16-2.95-10.42-2.95-5.33,0-9.51,1.71-12.53,5.12-3.02,3.41-4.53,8.15-4.53,14.23s1.54,10.93,4.62,14.29c3.08,3.37,7.41,5.05,12.99,5.05,2.6,0,4.98-.28,7.13-.84,2.15-.56,4.2-1.44,6.14-2.63v-14.08h-15.19v-2.79h21.64v17.3c-2.44,1.94-5.34,3.43-8.71,4.46-3.37,1.03-7.06,1.55-11.07,1.55-5.05,0-9.36-.88-12.96-2.63Z"/>
+        <path class="cls-1" d="M2315.88,52.51h36.77v2.98h-30.32v15.69h26.79v2.91h-26.79v18.85h30.32v2.98h-36.77v-43.41ZM2332.62,38.68h4.34l7.69,9.49h-3.04l-6.82-6.57-6.82,6.57h-3.04l7.69-9.49Z"/>
+        <path class="cls-1" d="M2362.08,52.51h6.51l26.42,33.67v-33.67h5.46v43.41h-3.22l-29.71-37.77v37.77h-5.46v-43.41Z"/>
+        <path class="cls-1" d="M2417.52,90.71c-3.97-3.89-5.95-9.45-5.95-16.68s1.97-12.53,5.92-16.37c3.95-3.85,9.6-5.77,16.96-5.77,5.99,0,10.87,1.26,14.64,3.78,3.76,2.52,5.99,6.04,6.7,10.54h-5.58c-.7-3.56-2.42-6.34-5.15-8.34-2.73-2.01-6.16-3.01-10.29-3.01-5.38,0-9.5,1.65-12.37,4.96-2.87,3.31-4.31,8.04-4.31,14.2s1.45,11.11,4.34,14.48c2.89,3.37,7.05,5.05,12.46,5.05,4.13,0,7.54-.99,10.23-2.98,2.69-1.99,4.38-4.78,5.08-8.37h5.58c-.7,4.51-2.94,8.02-6.7,10.54-3.76,2.52-8.6,3.78-14.51,3.78-7.4,0-13.09-1.94-17.05-5.83Z"/>
+        <path class="cls-1" d="M2468.43,52.51h6.45v43.41h-6.45v-43.41Z"/>
+        <path class="cls-1" d="M2520.65,84.63h-24.99l-5.64,11.29h-4.34l22.57-44.03h3.35l21.27,44.03h-6.95l-5.27-11.29ZM2519.22,81.66l-10.67-22.82-11.41,22.82h22.08Z"/>
+        <path class="cls-1" d="M2027.54,127.85h36.77v2.98h-30.32v15.69h26.79v2.91h-26.79v18.85h30.32v2.98h-36.77v-43.41Z"/>
+        <path class="cls-1" d="M2078.7,168.22c-3.6-2.44-5.58-5.91-5.95-10.42h5.58c.29,3.8,1.66,6.6,4.13,8.4,2.46,1.8,6.09,2.7,10.88,2.7,4.26,0,7.51-.74,9.77-2.23,2.25-1.49,3.38-3.62,3.38-6.39,0-1.65-.43-3.04-1.3-4.15-.87-1.12-2.35-2.11-4.44-2.98-2.09-.87-5.01-1.67-8.77-2.42-6-1.16-10.51-2.66-13.55-4.5-3.04-1.84-4.56-4.44-4.56-7.78,0-3.72,1.74-6.52,5.21-8.4,3.47-1.88,8.04-2.82,13.71-2.82s10.22,1.02,13.43,3.07c3.2,2.05,5.05,4.89,5.55,8.53h-5.52c-.62-3.02-2.08-5.21-4.37-6.57-2.29-1.36-5.47-2.05-9.52-2.05s-6.92.64-8.96,1.92c-2.05,1.28-3.07,3.06-3.07,5.33,0,1.36.39,2.52,1.18,3.47.79.95,2.16,1.82,4.12,2.6,1.96.79,4.76,1.55,8.4,2.29,4.46.91,8.05,1.9,10.76,2.98,2.71,1.08,4.74,2.47,6.11,4.19,1.36,1.72,2.05,3.9,2.05,6.54,0,3.89-1.75,6.92-5.24,9.09-3.49,2.17-8.24,3.26-14.23,3.26s-11.16-1.22-14.76-3.66Z"/>
+        <path class="cls-1" d="M2138.55,130.83h-18.36v-2.98h43.1v2.98h-18.29v40.44h-6.45v-40.44Z"/>
+        <path class="cls-1" d="M2207.29,167.88c.81,1.43,1.6,2.39,2.39,2.88v.5h-6.76c-.7-.79-1.35-1.78-1.95-2.98-.6-1.2-1.25-2.73-1.95-4.59-1.16-3.06-2.34-5.42-3.54-7.1-1.2-1.67-2.67-2.78-4.4-3.32h-13.08v17.99h-6.45v-43.41h17.92c5.95,0,10.55,1.04,13.8,3.13,3.25,2.09,4.87,5.28,4.87,9.58,0,6.41-3.62,10.4-10.85,11.97,1.57.79,2.93,1.93,4.09,3.44,1.16,1.51,2.25,3.56,3.29,6.17.95,2.4,1.83,4.31,2.64,5.74ZM2189.59,150.36c8.1,0,12.15-3.26,12.15-9.8s-4.05-9.74-12.15-9.74h-11.6v19.54h11.6Z"/>
+        <path class="cls-1" d="M2249.06,159.98h-24.99l-5.64,11.29h-4.34l22.57-44.03h3.35l21.27,44.03h-6.95l-5.27-11.29ZM2247.63,157l-10.67-22.82-11.41,22.82h22.08Z"/>
+        <path class="cls-1" d="M2277.65,130.83h-18.36v-2.98h43.1v2.98h-18.29v40.44h-6.45v-40.44Z"/>
+        <path class="cls-1" d="M2310.64,127.85h36.77v2.98h-30.32v15.69h26.79v2.91h-26.79v18.85h30.32v2.98h-36.77v-43.41ZM2337.31,113.96c.95-1.07,2.05-1.61,3.29-1.61.62,0,1.11.15,1.46.46.35.31.53.69.53,1.15,0,.87-.79,1.84-2.36,2.92l-9.49,6.63h-2.17l8.74-9.55Z"/>
+        <path class="cls-1" d="M2366.76,169.25c-3.6-1.76-6.35-4.31-8.25-7.66-1.9-3.35-2.85-7.34-2.85-11.97s.93-8.62,2.79-11.97c1.86-3.35,4.55-5.92,8.06-7.72,3.51-1.8,7.69-2.7,12.53-2.7,5.87,0,10.7,1.27,14.48,3.81,3.78,2.54,6.07,6.05,6.85,10.51h-5.58c-.74-3.64-2.46-6.44-5.15-8.4-2.69-1.96-6.16-2.95-10.42-2.95-5.33,0-9.51,1.71-12.53,5.12-3.02,3.41-4.53,8.15-4.53,14.23s1.54,10.93,4.62,14.29c3.08,3.37,7.41,5.05,12.99,5.05,2.6,0,4.98-.28,7.13-.84,2.15-.56,4.2-1.44,6.14-2.63v-14.08h-15.19v-2.79h21.64v17.3c-2.44,1.94-5.34,3.43-8.71,4.46-3.37,1.03-7.06,1.55-11.07,1.55-5.05,0-9.36-.88-12.96-2.63Z"/>
+        <path class="cls-1" d="M2414.02,127.85h6.45v43.41h-6.45v-43.41Z"/>
+        <path class="cls-1" d="M2440.07,166.05c-3.97-3.89-5.95-9.45-5.95-16.68s1.97-12.53,5.92-16.37c3.95-3.85,9.6-5.77,16.96-5.77,5.99,0,10.87,1.26,14.64,3.78,3.76,2.52,5.99,6.04,6.7,10.54h-5.58c-.7-3.56-2.42-6.34-5.15-8.34s-6.16-3.01-10.29-3.01c-5.38,0-9.5,1.65-12.37,4.96-2.87,3.31-4.31,8.04-4.31,14.2s1.45,11.11,4.34,14.48,7.05,5.05,12.46,5.05c4.13,0,7.54-.99,10.23-2.98,2.69-1.99,4.38-4.78,5.08-8.37h5.58c-.7,4.51-2.94,8.02-6.7,10.54-3.76,2.52-8.6,3.78-14.51,3.78-7.4,0-13.09-1.94-17.05-5.83Z"/>
+        <path class="cls-1" d="M2519.38,159.98h-24.99l-5.64,11.29h-4.34l22.57-44.03h3.35l21.27,44.03h-6.95l-5.27-11.29ZM2517.96,157l-10.67-22.82-11.41,22.82h22.08Z"/>
+      </g>
+      <g>
+        <path class="cls-1" d="M473.7,77.1c-9.27-5.61-22.4-8.41-39.39-8.41h-16.62l-6.03,9.49h22.99c9.55,0,16.68,2.03,21.4,6.08,4.72,4.05,7.08,10.86,7.08,20.4s-2.39,16.6-7.16,20.49c-4.78,3.89-11.88,5.83-21.32,5.83h-22.99v-52.8h-24.65v107.1h24.65v-44.64h22.65c17.32,0,30.54-2.83,39.64-8.49,9.1-5.66,13.66-14.82,13.66-27.48s-4.64-21.96-13.91-27.57Z"/>
+        <path class="cls-1" d="M997.59,77.1c-9.27-5.61-22.4-8.41-39.39-8.41h-16.62l-6.03,9.49h22.99c9.55,0,16.68,2.03,21.4,6.08,4.72,4.05,7.08,10.86,7.08,20.4s-2.39,16.6-7.16,20.49c-4.78,3.89-11.88,5.83-21.32,5.83h-22.99v-52.8h-24.65v107.1h24.65v-44.64h22.65c17.32,0,30.54-2.83,39.64-8.49,9.1-5.66,13.66-14.82,13.66-27.48s-4.64-21.96-13.91-27.57Z"/>
+        <path class="cls-1" d="M659.71,176.63c2.17,4.11,4.19,6.33,6.08,6.66v2h-24.49c-2-2.11-3.83-4.83-5.5-8.16-1.67-3.33-3.5-7.66-5.5-12.99-2.78-7.44-5.52-13.33-8.25-17.66-2.72-4.33-6.14-7.22-10.24-8.66h-29.98v47.47h-24.49v-116.59h51.13c16.99,0,30.09,2.66,39.31,8,9.22,5.33,13.82,14.1,13.82,26.32,0,16.88-9.33,27.65-27.98,32.31,4,2.22,7.47,5.3,10.41,9.24,2.94,3.94,5.69,9.08,8.25,15.41,2.78,7,5.25,12.55,7.41,16.66ZM581.84,128.32h26.98c8.99,0,15.99-1.86,20.99-5.58,5-3.72,7.5-10.3,7.5-19.74s-2.5-15.66-7.5-19.32c-4.99-3.66-11.99-5.5-20.99-5.5h-26.98v50.14Z"/>
+        <path class="cls-1" d="M748.23,179.79c-9.94-4.77-17.52-11.69-22.73-20.74-5.22-9.05-7.83-19.9-7.83-32.56s2.64-23.1,7.91-31.98c5.27-8.88,12.85-15.68,22.74-20.4,9.88-4.72,21.65-7.08,35.31-7.08s25.23,2.36,35.06,7.08c9.83,4.72,17.38,11.52,22.65,20.4,5.27,8.89,7.91,19.55,7.91,31.98s-2.61,23.51-7.83,32.56c-5.22,9.05-12.77,15.96-22.65,20.74-9.88,4.77-21.6,7.16-35.14,7.16s-25.46-2.39-35.4-7.16ZM813.77,164.38c7-8.72,10.49-21.35,10.49-37.89s-3.5-28.59-10.49-37.14c-6.99-8.55-17.04-12.83-30.15-12.83s-23.35,4.3-30.4,12.91c-7.05,8.61-10.58,20.96-10.58,37.06s3.5,29.18,10.49,37.89c7,8.72,17.16,13.08,30.48,13.08s23.15-4.36,30.15-13.08Z"/>
+        <path class="cls-1" d="M1090.64,179.79c-9.94-4.77-17.52-11.69-22.73-20.74-5.22-9.05-7.83-19.9-7.83-32.56s2.64-23.1,7.91-31.98c5.27-8.88,12.85-15.68,22.74-20.4,9.88-4.72,21.65-7.08,35.31-7.08s25.23,2.36,35.06,7.08c9.83,4.72,17.38,11.52,22.65,20.4,5.27,8.89,7.91,19.55,7.91,31.98s-2.61,23.51-7.83,32.56c-5.22,9.05-12.77,15.96-22.65,20.74-9.88,4.77-21.6,7.16-35.14,7.16s-25.46-2.39-35.4-7.16ZM1156.18,164.38c7-8.72,10.49-21.35,10.49-37.89s-3.5-28.59-10.49-37.14c-6.99-8.55-17.04-12.83-30.15-12.83s-23.35,4.3-30.4,12.91c-7.05,8.61-10.58,20.96-10.58,37.06s3.5,29.18,10.49,37.89c7,8.72,17.16,13.08,30.48,13.08s23.15-4.36,30.15-13.08ZM1143.79,30.44c1.25-2,2.69-3.53,4.32-4.58,1.63-1.05,3.54-1.75,5.73-2.1,1.97-.32,3.63-.13,4.98.55,1.35.69,2.14,1.79,2.39,3.33.41,2.52-1.4,5.62-5.42,9.31l-25.46,23-4.9.11,18.34-29.61Z"/>
+        <path class="cls-1" d="M1261.27,176.79c-10.38-6.77-15.91-16.32-16.57-28.65h19.99c.67,10.22,4.14,17.66,10.41,22.32,6.27,4.66,15.57,7,27.9,7,10.33,0,18.07-1.83,23.24-5.5,5.16-3.66,7.74-8.99,7.74-15.99,0-3.89-.94-7.22-2.83-9.99-1.89-2.77-5.39-5.27-10.49-7.49-5.11-2.22-12.44-4.27-21.99-6.16-14.99-3-27.23-7.1-36.73-12.33-9.49-5.22-14.24-12.77-14.24-22.65,0-10.88,5-18.63,14.99-23.24,9.99-4.61,22.87-6.91,38.64-6.91,17.1,0,30.15,2.89,39.14,8.66,8.99,5.78,13.99,13.6,14.99,23.49h-19.66c-1.56-8.1-5.28-13.91-11.16-17.41-5.89-3.5-13.99-5.25-24.32-5.25-9.44,0-16.49,1.58-21.15,4.75-4.66,3.16-7,7.3-7,12.41,0,2.89.83,5.44,2.5,7.66,1.67,2.22,4.92,4.33,9.75,6.33,4.83,2,11.85,4,21.07,6,12.33,2.66,22.15,5.39,29.48,8.16,7.33,2.78,13.1,6.66,17.32,11.66,4.22,5,6.33,11.55,6.33,19.65,0,7-2.28,13.02-6.83,18.07-4.55,5.05-10.99,8.91-19.32,11.58-8.33,2.66-18.05,4-29.15,4-17.65,0-31.67-3.39-42.06-10.16Z"/>
+        <path class="cls-1" d="M1432.25,68.69h24.65v116.59h-24.65v-116.59Z"/>
+        <path class="cls-1" d="M1573.12,78.19h-48.64v-9.49h121.76v9.49h-48.64v107.1h-24.49v-107.1Z"/>
+        <path class="cls-1" d="M1727.33,179.79c-9.94-4.77-17.52-11.69-22.73-20.74-5.22-9.05-7.83-19.9-7.83-32.56s2.64-23.1,7.91-31.98c5.27-8.88,12.85-15.68,22.74-20.4,9.88-4.72,21.65-7.08,35.31-7.08s25.23,2.36,35.06,7.08c9.83,4.72,17.38,11.52,22.65,20.4,5.27,8.89,7.91,19.55,7.91,31.98s-2.61,23.51-7.83,32.56c-5.22,9.05-12.77,15.96-22.65,20.74-9.88,4.77-21.6,7.16-35.14,7.16s-25.46-2.39-35.4-7.16ZM1792.87,164.38c7-8.72,10.49-21.35,10.49-37.89s-3.5-28.59-10.49-37.14c-6.99-8.55-17.04-12.83-30.15-12.83s-23.35,4.3-30.4,12.91c-7.05,8.61-10.58,20.96-10.58,37.06s3.5,29.18,10.49,37.89c7,8.72,17.16,13.08,30.48,13.08s23.15-4.36,30.15-13.08Z"/>
+      </g>
+    </g>
+  </g>
+</svg><span class="product-badge"><b>SISCAP</b> · sistema de captação</span></div>
+    <div class="topnav-links">
+      <a href="#produto">O produto</a>
+      <a href="#automacao">Automação</a>
+      <a href="#territorio">Território</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#entregaveis">Entregáveis</a>
+      <a href="#oferta">Proposta</a>
+    </div>
+  </div>
+</div>
+
+<header class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow">Proposta comercial · Exemplo: Renata Salgado (candidata fictícia)</span>
+      <h1>SISCAP: um sistema territorial de captação, adaptado para a sua campanha.</h1>
+      <p class="lede">O mesmo motor de organização de apoiadores já testado em campanhas reais — adaptado ao domínio, às cores e à identidade visual da sua campanha. Cada cadastro se resolve sozinho em cidade, região e grupo de WhatsApp certo, sem que ninguém da equipe precise separar planilha por planilha.</p>
+      <div class="hero-tags">
+        <span class="tag">Sistema testado em campanhas reais</span>
+        <span class="tag">Mapeamento automático de cidades do seu estado</span>
+        <span class="tag">Agrupamento nas regiões oficiais do seu estado</span>
+        <span class="tag">Recorte por bairro na capital</span>
+      </div>
+    </div>
+    <div class="hero-photo hero-photo-illustration">
+      <svg width="100%" height="100%" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Avatar ilustrativo">
+  <defs>
+    <radialGradient id="avatarBgGrad" cx="30%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#eafff2"/>
+      <stop offset="45%" stop-color="#cfe9ff"/>
+      <stop offset="100%" stop-color="#fdf6d8"/>
+    </radialGradient>
+    <linearGradient id="avatarBust" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E7A46"/>
+      <stop offset="100%" stop-color="#14171C"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#avatarBgGrad)"/>
+  <circle cx="200" cy="168" r="72" fill="url(#avatarBust)"/>
+  <path d="M60 400 C60 288 122 240 200 240 C278 240 340 288 340 400 Z" fill="url(#avatarBust)"/>
+  <g transform="translate(200,150) rotate(-18)">
+    <rect x="-70" y="34" width="140" height="9" fill="#009C3B"/>
+    <rect x="-70" y="43" width="140" height="9" fill="#FFDF00"/>
+    <rect x="-70" y="52" width="140" height="9" fill="#002776"/>
+  </g>
+</svg>
+    </div>
+  </div>
+</header>
+
+<section id="produto" class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">O produto</span>
+    <h2>A tela que o apoiador vê — no computador e no celular</h2>
+    <p>Exemplo de landing page no mesmo sistema, aqui personalizada para <b>Renata Salgado</b> — candidata fictícia usada só para ilustrar a proposta. A mesma estrutura é adaptada para a identidade visual e o estado de cada campanha: a pessoa digita a cidade, o sistema já sabe a região dela e — se for a capital do estado — pede também o bairro.</p>
+  </div>
+
+  <div class="device-row">
+    <div>
+      <div class="browser-frame">
+        <div class="browser-bar">
+          <div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div>
+          <div class="browser-url">timerenatasalgado.com.br</div>
+        </div>
+        <div class="browser-screen">
+          <div class="lp-mock">
+            <div class="lp-topbar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 132" role="img" aria-label="Renata Salgado">
+  <defs>
+    <style>
+      .gv{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;}
+    </style>
+  </defs>
+
+  <!-- RENATA -->
+  <text x="4" y="58" class="gv" font-size="46" font-weight="300" letter-spacing="8" fill="#FFFFFF">RENATA</text>
+
+  <!-- ribbon accent behind/through SALGADO, using site palette -->
+  <g transform="translate(150,64) rotate(-18)">
+    <rect x="-14" y="0" width="150" height="15" fill="#009C3B"/>
+    <rect x="-14" y="15" width="150" height="15" fill="#FFDF00"/>
+    <rect x="-14" y="30" width="150" height="15" fill="#002776"/>
+  </g>
+
+  <!-- SALGADO -->
+  <text x="0" y="122" class="gv" font-size="68" font-weight="800" letter-spacing="0" fill="#FFFFFF">SALGADO</text>
+</svg></div>
+            <div class="lp-hero">
+              <div>
+                <div class="lp-eyebrow">Serra Clara · 2026</div>
+                <h3>O nosso estado não <mark>muda sozinho</mark>. Precisamos dialogar!</h3>
+                <p>Preencha seus dados e venha fazer parte do time Renata Salgado. Estamos organizando grupos de WhatsApp para ouvir as suas demandas de perto.</p>
+                <div class="lp-form">
+                  <div class="lp-field"><label>Nome completo</label><div class="in filled">Márcia Andrade Souza</div></div>
+                  <div class="lp-field"><label>WhatsApp</label><div class="in filled">(11) 99123-4567</div></div>
+                  <div class="lp-field"><label>Cidade (Estado)</label><div class="in filled">Capital</div></div>
+                  <div class="lp-field"><label>Bairro (Capital)</label><div class="in hl">Jardim Alto</div></div>
+                  <div class="lp-field"><label>Região</label><div class="in ro">Capital</div></div>
+                  <div class="lp-check"><div class="box"></div><div>Li e concordo com o tratamento dos meus dados pessoais conforme a Política de Privacidade.</div></div>
+                  <div class="lp-btn">Quero entrar no grupo</div>
+                </div>
+              </div>
+              <div class="lp-photo"><svg width="100%" height="100%" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Avatar ilustrativo">
+  <defs>
+    <radialGradient id="avatarBgGrad" cx="30%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#eafff2"/>
+      <stop offset="45%" stop-color="#cfe9ff"/>
+      <stop offset="100%" stop-color="#fdf6d8"/>
+    </radialGradient>
+    <linearGradient id="avatarBust" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E7A46"/>
+      <stop offset="100%" stop-color="#14171C"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#avatarBgGrad)"/>
+  <circle cx="200" cy="168" r="72" fill="url(#avatarBust)"/>
+  <path d="M60 400 C60 288 122 240 200 240 C278 240 340 288 340 400 Z" fill="url(#avatarBust)"/>
+  <g transform="translate(200,150) rotate(-18)">
+    <rect x="-70" y="34" width="140" height="9" fill="#009C3B"/>
+    <rect x="-70" y="43" width="140" height="9" fill="#FFDF00"/>
+    <rect x="-70" y="52" width="140" height="9" fill="#002776"/>
+  </g>
+</svg></div>
+            </div>
+            <div class="lp-imbat">
+              <h4>Juntos somos imbatíveis!</h4>
+              <div class="lp-imbat-cards">
+                <div class="lp-imbat-card" style="--c:#009C3B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.9 4.9a10 10 0 0 0 0 14.2"/><path d="M8.5 8.5a5 5 0 0 0 0 7"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19.1 4.9a10 10 0 0 1 0 14.2"/></svg><p>Agenda de visitas e eventos.</p></div>
+                <div class="lp-imbat-card" style="--c:#4C7BFF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 3v3"/><path d="M16 3v3"/></svg><p>Materiais exclusivos da pré-campanha.</p></div>
+                <div class="lp-imbat-card" style="--c:#FFDF00"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 3v4h-4"/></svg><p>Lives fechadas comigo e com a equipe.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption-row">
+        <span class="cap"><b>Desktop</b> — hero, formulário e prova social em uma dobra</span>
+        <span class="status-live">exemplo ilustrativo</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="phone-frame">
+        <div class="phone-screen phone-scroll">
+          <div class="phone-notch"></div>
+          <div class="lp-mock" style="font-size:0.82em;">
+            <div class="lp-topbar" style="padding-top:1.1rem;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 132" role="img" aria-label="Renata Salgado">
+  <defs>
+    <style>
+      .gv{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;}
+    </style>
+  </defs>
+  <text x="4" y="58" class="gv" font-size="46" font-weight="300" letter-spacing="8" fill="#FFFFFF">RENATA</text>
+  <g transform="translate(150,64) rotate(-18)">
+    <rect x="-14" y="0" width="150" height="15" fill="#009C3B"/>
+    <rect x="-14" y="15" width="150" height="15" fill="#FFDF00"/>
+    <rect x="-14" y="30" width="150" height="15" fill="#002776"/>
+  </g>
+  <text x="0" y="122" class="gv" font-size="68" font-weight="800" letter-spacing="0" fill="#FFFFFF">SALGADO</text>
+</svg></div>
+            <div style="padding:0.9rem 0.85rem 1.1rem;">
+              <div class="lp-photo lp-photo-mobile"><svg width="100%" height="100%" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Avatar ilustrativo">
+  <defs>
+    <radialGradient id="avatarBgGrad" cx="30%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#eafff2"/>
+      <stop offset="45%" stop-color="#cfe9ff"/>
+      <stop offset="100%" stop-color="#fdf6d8"/>
+    </radialGradient>
+    <linearGradient id="avatarBust" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E7A46"/>
+      <stop offset="100%" stop-color="#14171C"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#avatarBgGrad)"/>
+  <circle cx="200" cy="168" r="72" fill="url(#avatarBust)"/>
+  <path d="M60 400 C60 288 122 240 200 240 C278 240 340 288 340 400 Z" fill="url(#avatarBust)"/>
+  <g transform="translate(200,150) rotate(-18)">
+    <rect x="-70" y="34" width="140" height="9" fill="#009C3B"/>
+    <rect x="-70" y="43" width="140" height="9" fill="#FFDF00"/>
+    <rect x="-70" y="52" width="140" height="9" fill="#002776"/>
+  </g>
+</svg></div>
+              <div class="lp-eyebrow" style="margin-top:0.85rem;">Serra Clara · 2026</div>
+              <h3 style="margin-top:0.35rem;">O nosso estado não <mark>muda sozinho</mark>. Precisamos dialogar!</h3>
+              <p style="margin-top:0.5rem;">Preencha seus dados e venha fazer parte do time Renata Salgado. Estamos organizando grupos de WhatsApp para ouvir as suas demandas de perto e fortalecer a voz da nossa gente.</p>
+              <div class="lp-form" style="margin-top:0.9rem;">
+                <div class="lp-field"><label>Nome completo</label><div class="in">Busque digitando...</div></div>
+                <div class="lp-field"><label>WhatsApp</label><div class="in">(11) 90000-0000</div></div>
+                <div class="lp-field"><label>Cidade (Estado)</label><div class="in filled">Vale Novo</div></div>
+                <div class="lp-field"><label>Região</label><div class="in ro">Serra do Norte</div></div>
+                <div class="lp-btn">Quero entrar no grupo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption-row" style="justify-content:center;">
+        <span class="cap">Mobile — mesma ordem da página real: foto, título, formulário</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="grid-2" style="align-items:stretch;">
+    <div class="card">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7l-9-5Z"/><path d="m9 12 2 2 4-4"/></svg>
+      <h4>Roteamento automático de região</h4>
+      <p>A pessoa só digita a cidade. Um mapa embutido de <b>municípios → regiões oficiais</b> (a mesma divisão regional reconhecida no estado, com a capital destacada à parte) resolve a região sozinho — sem depender de ninguém da equipe classificar manualmente.</p>
+    </div>
+    <div class="card">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21c-4.4-2.8-8-6.6-8-11a8 8 0 0 1 16 0c0 4.4-3.6 8.2-8 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <h4>Bairro só onde faz sentido</h4>
+      <p>Fora da capital, o campo de bairro nem aparece — ninguém perde tempo preenchendo algo que a campanha não vai usar. Dentro da capital, o formulário muda em tempo real e pede o bairro, abrindo a leitura de apoio até no nível de bairro.</p>
+    </div>
+  </div>
+</section>
+
+<section id="automacao" class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Automação</span>
+    <h2>Do clique do apoiador à linha na planilha, sem ninguém digitando nada</h2>
+    <p>Formulário, planilha e grupo de WhatsApp são três telas diferentes hoje em qualquer campanha manual. Aqui viraram um fluxo único, com o Google Apps Script como motor invisível no meio.</p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="flow-num">01</span>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 4v5"/></svg>
+      <h4>Apoiador preenche</h4>
+      <p>Nome, WhatsApp e cidade — 30 segundos, sem cadastro, sem senha.</p>
+    </div>
+    <div class="flow-step">
+      <span class="flow-num">02</span>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+      <h4>Apps Script dispara</h4>
+      <p>Um Web App do Google Apps Script recebe o envio e grava a linha na hora.</p>
+    </div>
+    <div class="flow-step">
+      <span class="flow-num">03</span>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <h4>Planilha se organiza</h4>
+      <p>Data, nome, WhatsApp, cidade, região e bairro — uma linha por apoiador, pronta para a equipe filtrar.</p>
+    </div>
+    <div class="flow-step">
+      <span class="flow-num">04</span>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.5 8.5 0 0 1-3.8-.9L3 20l1.1-5.1a8.4 8.4 0 0 1-.9-3.8A8.4 8.4 0 0 1 11.6 3a8.5 8.5 0 0 1 9.4 8.5Z"/></svg>
+      <h4>Apoiador entra no grupo certo</h4>
+      <p>O botão final já leva para o grupo de WhatsApp da região dele — não um grupo genérico.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:2.2rem;">
+    <div class="sheet-frame">
+      <div class="sheet-bar">
+        <div class="g"></div>
+        <div>
+          <b>Cadastros — Time Renata Salgado</b><br>
+          <span>Google Sheets · atualizado automaticamente a cada envio</span>
+        </div>
+      </div>
+      <div class="sheet-wrap-scroll">
+        <table class="sheet-table">
+          <thead>
+            <tr><th>#</th><th>Carimbo</th><th>Nome</th><th>WhatsApp</th><th>Cidade</th><th>Região</th><th>Bairro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>21/07 09:14</td><td>Márcia Andrade Souza</td><td>(11) 99123-4567</td><td>Capital</td><td>Capital</td><td>Jardim Alto</td></tr>
+            <tr><td>2</td><td>21/07 09:22</td><td>Rogério Kappaun</td><td>(21) 99876-1122</td><td>Vale Novo</td><td>Serra do Norte</td><td>—</td></tr>
+            <tr><td>3</td><td>21/07 09:40</td><td>Vanessa Lopes Terra</td><td>(11) 98212-3344</td><td>Porto Claro</td><td>Região Metropolitana da Capital</td><td>—</td></tr>
+            <tr><td>4</td><td>21/07 10:03</td><td>Deoclécio Fão Nunes</td><td>(31) 99001-7788</td><td>Campo Alto</td><td>Centro do Estado</td><td>—</td></tr>
+            <tr><td>5</td><td>21/07 10:15</td><td>Ivanete Cristo Batista</td><td>(11) 99345-9090</td><td>Capital</td><td>Capital</td><td>Vila Nova</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sheet-note">Dados fictícios, no mesmo formato usado nas planilhas reais do sistema (planilha própria, ID configurado, sem acesso de terceiros).</div>
+    </div>
+  </div>
+</section>
+
+<section class="band-dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Grupos de WhatsApp por região</span>
+      <h2>Cada apoiador entra na conversa certa — não numa lista genérica</h2>
+      <p>Grupo nomeado "Time Renata Salgado — {Região}", só a administração edita nome/foto/descrição. Cada grupo por região pode ter até 1.024 participantes (limite do WhatsApp) — quando chega perto disso, abre-se automaticamente uma segunda edição sem perder quem já entrou.</p>
+    </div>
+
+    <div class="device-row" style="align-items:center;">
+      <div class="grid-2">
+        <div class="card" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.12);">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#3FA872;"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.5 8.5 0 0 1-3.8-.9L3 20l1.1-5.1a8.4 8.4 0 0 1-.9-3.8A8.4 8.4 0 0 1 11.6 3a8.5 8.5 0 0 1 9.4 8.5Z"/></svg>
+          <h4 style="color:#fff;">Um grupo por região, não por cidade</h4>
+          <p style="color:rgba(242,241,236,0.72);">Centenas de cidades caem em poucas dezenas de grupos regionais — gerenciável para a equipe, relevante para quem entra.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.12);">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#3FA872;"><path d="M12 21c-4.4-2.8-8-6.6-8-11a8 8 0 0 1 16 0c0 4.4-3.6 8.2-8 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <h4 style="color:#fff;">Agenda de visitas por região</h4>
+          <p style="color:rgba(242,241,236,0.72);">Dentro do grupo, a equipe divulga datas de visita e eventos locais — a região sabe quando Salgado chega perto.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.12);">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#3FA872;"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 3v4h-4"/></svg>
+          <h4 style="color:#fff;">Lives fechadas com o candidato</h4>
+          <p style="color:rgba(242,241,236,0.72);">O mesmo canal serve de auditório: lives internas de Renata Salgado com a base já organizada por região.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.12);">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#3FA872;"><path d="M3 11l18-7-7 18-2-8-8-3Z"/></svg>
+          <h4 style="color:#fff;">Base pronta para impulsionar tráfego pago</h4>
+          <p style="color:rgba(242,241,236,0.72);">Cada grupo é também uma audiência qualificada por região — pronta para segmentar campanhas de mídia paga por praça.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="wa-mock">
+              <div class="wa-bar">
+                <div class="ava">MA</div>
+                <div class="meta"><b>Márcia Andrade</b><span>online</span></div>
+              </div>
+              <div class="wa-body">
+                <div class="wa-msg sys">Hoje</div>
+                <div class="wa-msg link-card">
+                  <div class="og-img"><div class="og-illustration">
+                    <div class="og-illustration-logo">RENATA<br><b>SALGADO</b></div>
+                    <div class="og-illustration-tag">Precisamos <mark>dialogar!</mark></div>
+                  </div></div>
+                  <div class="og-body">
+                    <div class="og-title">Renata Salgado — Entre para o grupo</div>
+                    <div class="og-desc">Venha fazer parte do time Renata Salgado e ajude a fortalecer a voz da nossa gente.</div>
+                    <div class="og-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>renata-salgado-lp.pages.dev</div>
+                  </div>
+                  <span class="time" style="padding:0 0.5rem 0.4rem; display:block;">09:14</span>
+                </div>
+                <div class="wa-msg">Envia esse link pro pessoal da nossa região, o cadastro já organiza tudo sozinho 🙌<span class="time">09:15</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption-row" style="justify-content:center;">
+          <span class="cap" style="color:rgba(242,241,236,0.6);">exemplo de prévia do link ao ser enviado no WhatsApp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="territorio" class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Inteligência territorial</span>
+    <h2>O benefício eleitoral: saber exatamente onde está sua força</h2>
+    <p>Cada cadastro carrega cidade, região oficial e — na capital — bairro. Isso transforma uma lista de nomes soltos em um mapa vivo de apoio, atualizado sozinho a cada novo cadastro.</p>
+  </div>
+
+  <div class="region-panel">
+    <div>
+      <div class="grid-2">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg>
+          <h4>Priorização de agenda de rua</h4>
+          <p>A equipe sabe, por número real de apoiadores, em qual cidade e região vale mais a pena marcar a próxima visita — não por achismo.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+          <h4>Leitura de tração por praça</h4>
+          <p>Comparar volume de cadastro entre a capital, o interior e regiões-chave (ex.: Vale Verde) mostra onde o discurso está pegando.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+          <h4>Alocação de tráfego pago por região</h4>
+          <p>Onde há mais cadastro orgânico, mais impulsionamento reforça; onde há vazio territorial, a verba de mídia entra para abrir a região.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/></svg>
+          <h4>Recorte fino dentro da Capital</h4>
+          <p>Bairro da capital aberto separadamente das demais cidades do estado — a maior concentração eleitoral do estado com resolução de bairro, não só de município.</p>
+        </div>
+      </div>
+    </div>
+    <div class="region-viz">
+      <div class="eyebrow" style="margin-bottom:0.9rem;">Regiões cobertas neste exemplo</div>
+      <div class="region-list">
+        <span class="region-chip poa">Capital</span>
+        <span class="region-chip">Vale Verde</span>
+        <span class="region-chip n2">Região Metropolitana da Capital</span>
+        <span class="region-chip n3">Serra do Norte</span>
+        <span class="region-chip">Litoral Norte</span>
+        <span class="region-chip n2">Interior Norte</span>
+        <span class="region-chip n3">Fronteira Oeste</span>
+        <span class="region-chip">Planalto</span>
+        <span class="region-chip n2">Planalto Central</span>
+        <span class="region-chip n3">Alto Vale</span>
+        <span class="region-chip">Centro do Estado</span>
+        <span class="region-chip n2">Zona Sul</span>
+        <span class="region-chip n3">Vale do Rio Manso</span>
+        <span class="region-chip">Vale do Rio Bonito</span>
+        <span class="region-chip n2">Campos Altos</span>
+        <span class="region-chip n3">Serra Verde</span>
+        <span class="region-chip">Vale das Colônias</span>
+        <span class="region-chip n2">Costa Nova</span>
+        <span class="region-chip n3">Região Fronteira Norte</span>
+        <span class="region-chip">+ 11 regiões</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--ink-soft); margin-top:1.1rem; line-height:1.5;">
+        Classificação segue a divisão regional oficial usada no estado — a mesma referência institucional reconhecida pelos municípios, o que dá credibilidade ao recorte quando apresentado a lideranças locais.
+      </p>
+    </div>
+  </div>
+
+  <div class="stat-row" style="margin-top:2.6rem;">
+    <div class="stat"><div class="n">1</div><div class="l">clique é só o que o apoiador precisa para cair no grupo certo da região dele.</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">planilhas paralelas — tudo cai automaticamente na mesma base, sem trabalho manual.</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">das cidades do seu estado reconhecidas por autocomplete, sem erro de digitação.</div></div>
+    <div class="stat"><div class="n">24/7</div><div class="l">sistema ativo — cadastro, gravação na planilha e redirecionamento funcionam a qualquer hora.</div></div>
+  </div>
+</section>
+
+<section id="compliance" class="band-dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Compliance eleitoral e LGPD</span>
+      <h2>Captação pensada para não gerar dor de cabeça jurídica</h2>
+      <p>Toda a estrutura do projeto passa por rigoroso controle jurídico, dentro das normas do TSE e de compliance eleitoral — do texto do formulário ao fluxo de consentimento e uso de dados.</p>
+    </div>
+    <div class="compliance-list">
+      <div class="compliance-item">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <div><h5>Consentimento explícito por checkbox</h5><p>Ninguém entra em nada sem marcar que leu e concorda com o tratamento dos dados — botão de envio fica bloqueado até isso acontecer.</p></div>
+      </div>
+      <div class="compliance-item">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <div><h5>Adesão voluntária e reversível</h5><p>O próprio formulário informa: "adesão voluntária, nenhuma lista de contatos de terceiros é utilizada" — e a pessoa pode sair do grupo quando quiser.</p></div>
+      </div>
+      <div class="compliance-item">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <div><h5>Linguagem calibrada para pré-campanha</h5><p>Textos como "pré-candidato" e o convite para "dialogar" foram redigidos para ficar dentro do período de pré-campanha, sem pedido de voto explícito.</p></div>
+      </div>
+      <div class="compliance-item">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7l-9-5Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <div><h5>Revisão jurídica contínua com o TSE como referência</h5><p>Política de privacidade, textos e fluxo de dados passam pelo crivo do advogado eleitoral da campanha antes de cada nova etapa — da pré-campanha ao tráfego pago — seguindo as normas do TSE.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Infraestrutura</span>
+    <h2>No ar, com domínio próprio, sem depender de ninguém no dia a dia</h2>
+    <p>Isso não é maquete: é o mesmo processo de publicação já usado em campanhas reais, aplicado ao domínio da sua campanha.</p>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></svg>
+      <h4>Domínio próprio</h4>
+      <p>Seu domínio próprio (ex.: <b>timerenatasalgado.com.br</b>) apontado e propagando para o site — não fica dependurado num link genérico de plataforma.</p>
+    </div>
+    <div class="card">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+      <h4>Deploy automático</h4>
+      <p>Cloudflare Pages publica sozinho a cada atualização — qualquer ajuste de texto ou imagem vai ao ar sem depender de agência.</p>
+    </div>
+    <div class="card">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <h4>Prévia de link cuidada</h4>
+      <p>Imagem própria de compartilhamento (Open Graph) — quando o link roda no grupo de WhatsApp, aparece com foto, logo e identidade, não um preview genérico.</p>
+    </div>
+  </div>
+</section>
+
+<section id="entregaveis" class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Entregáveis</span>
+    <h2>Tudo que está incluído no pacote</h2>
+  </div>
+  <table class="check-table">
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Landing page completa e publicada</b><small>Hero com foto, formulário, seção de benefícios e rodapé — identidade visual na paleta verde/amarelo/azul do candidato.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Logotipo adaptado</b><small>Wordmark reconstruído a partir de referência visual, com faixa nas cores da campanha.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Banco de cidades do seu estado com autocomplete</b><small>Busca por digitação, sem depender de lista suspensa gigante.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Mapa cidade → região (divisão regional oficial do estado)</b><small>Classificação oficial, com a capital destacada separadamente.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Campo de bairro condicional para a capital</b><small>Bairros mapeados, aparecem só quando fazem sentido.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Integração com Google Sheets via Apps Script</b><small>Cada envio grava automaticamente data, nome, WhatsApp, cidade, região e bairro.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Roteamento para grupos de WhatsApp por região</b><small>Redirecionamento automático após o cadastro, por região do apoiador.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Domínio próprio configurado</b><small>Seu domínio (ex.: timerenatasalgado.com.br) apontado via Cloudflare, com deploy automático a cada atualização.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Imagem de compartilhamento (Open Graph/Twitter Card)</b><small>Prévia de link cuidada para quando o link circula em grupos e redes.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Textos revisados para compliance eleitoral</b><small>Redação ajustada para os limites do período de pré-campanha.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Criação de todos os grupos regionais + identidade visual</b><small>Grupo criado e nomeado em cada região do seu estado, com foto de perfil, descrição e capa padronizadas na identidade da campanha.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Monitoramento contínuo</b><small>Acompanhamento de novos cadastros, entradas nos grupos e alerta quando uma região se aproxima do limite de 1.024 participantes por grupo (limite do WhatsApp).</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Conversão do layout para campanha eleitoral a partir de 16/8</b><small>Ajuste de textos, disclaimers e chamadas do site e dos grupos para o período oficial de campanha, dentro do calendário eleitoral.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Planejamento estratégico de posts</b><small>Calendário de conteúdo para os grupos e redes, alinhado à agenda de visitas e às lives do candidato.</small></td></tr>
+    <tr><td class="yes"><span>✓</span></td><td class="lab"><b>Gestão de tráfego pago</b><small>Impulsionamento segmentado por região, priorizando praças com base nos dados reais de cadastro.</small></td></tr>
+  </table>
+</section>
+
+<section id="oferta" class="wrap">
+  <div class="offer-card">
+    <div>
+      <span class="eyebrow" style="color:var(--gold);">Como começamos</span>
+      <h3>Do sinal verde ao primeiro grupo regional no ar em poucos dias</h3>
+      <p>O sistema já é testado e comprovado em campanhas reais — adaptamos a identidade visual, o domínio e a divisão regional para o seu estado. O escopo abaixo é o que entregamos assim que a campanha aprova a proposta.</p>
+      <div class="offer-list">
+        <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Landing page com a identidade visual da sua campanha</div>
+        <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Mapeamento de cidades e regiões oficiais do seu estado</div>
+        <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Criação e identidade visual dos grupos regionais no WhatsApp</div>
+        <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Revisão da política de privacidade com o jurídico eleitoral da campanha</div>
+      </div>
+    </div>
+    <div class="offer-cta">
+      <div class="price-label">Investimento</div>
+      <div class="price">Sob consulta<span class="price-asterisk">*</span></div>
+      <div class="price-sub">Definido conforme o número de regiões, cidades e o escopo de tráfego pago da sua campanha.</div>
+      <a href="https://wa.me/5551994671877?text=Ol%C3%A1%2C%20vi%20a%20proposta%20do%20SISCAP%20e%20quero%20saber%20mais." class="btn" target="_blank" rel="noopener">Solicitar proposta</a>
+      <div class="fine">Proposta personalizada após reunião de diagnóstico com a campanha.<br><span class="price-asterisk">*</span> Não inclui o valor investido em impulsionamento (verba de mídia paga). Esse custo é sempre variável, definido conforme o plano de mídia, e pago diretamente pela campanha.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="footer-inner" style="flex-direction:column; align-items:flex-start; gap:0.5rem;">
+    <div style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:1rem;">
+      <span><b>SISCAP</b> — sistema de captação territorial, proposta comercial</span>
+      <span>Serra Clara · 2026</span>
+    </div>
+    <span style="font-size:0.72rem; color:var(--ink-faint);">"Renata Salgado", "Serra Clara" e os dados exibidos (planilha, conversas, cadastros) são fictícios — usados apenas para ilustrar o funcionamento do sistema nesta proposta comercial.</span>
+  </div>
+</footer>
