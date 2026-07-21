@@ -948,8 +948,14 @@
 
 <script>
   if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; }
-  function forceTop(){ if (!location.hash) { window.scrollTo(0, 0); } }
+  function forceTop(){ if (!location.hash && window.scrollY > 0) { window.scrollTo(0, 0); } }
   forceTop();
   window.addEventListener("pageshow", forceTop);
   document.addEventListener("DOMContentLoaded", forceTop);
+  window.addEventListener("load", forceTop);
+  // Alguns navegadores in-app (ex.: WhatsApp) restauram a posição de rolagem
+  // da sessão anterior depois que o carregamento inicial termina — reforça
+  // por alguns instantes para vencer essa restauração tardia.
+  [0, 50, 150, 300, 600, 1000, 1500].forEach(function(ms){ setTimeout(forceTop, ms); });
+  document.addEventListener("visibilitychange", function(){ if (document.visibilityState === "visible") forceTop(); });
 </script>
