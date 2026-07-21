@@ -948,20 +948,25 @@
 
 <script>
   if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; }
-  // Ignoramos qualquer #hash de âncora aqui de propósito: cliques no menu
-  // (que usam #produto, #automacao etc.) navegam na mesma página sem
-  // disparar load/DOMContentLoaded/pageshow de novo, então forçar o topo
-  // nesses eventos não atrapalha a navegação por âncora — só corrige uma
-  // aba reaberta/restaurada que ficou com hash e rolagem de uma visita
-  // anterior.
-  function forceTop(){ if (window.scrollY > 0) { window.scrollTo(0, 0); } }
-  forceTop();
-  window.addEventListener("pageshow", forceTop);
-  document.addEventListener("DOMContentLoaded", forceTop);
-  window.addEventListener("load", forceTop);
-  // Alguns navegadores in-app (ex.: WhatsApp) restauram a posição de rolagem
-  // da sessão anterior depois que o carregamento inicial termina — reforça
-  // por alguns instantes para vencer essa restauração tardia.
-  [0, 50, 150, 300, 600, 1000, 1500].forEach(function(ms){ setTimeout(forceTop, ms); });
-  document.addEventListener("visibilitychange", function(){ if (document.visibilityState === "visible") forceTop(); });
+
+  // Só corrige o topo quando a página está sendo aberta/restaurada de novo
+  // (carregamento inicial, volta do cache do navegador, ou aba que fica
+  // visível de novo) — nunca depois disso, para não atrapalhar quem clica
+  // num link do menu (#produto, #automacao etc.) ou rola a página por conta
+  // própria.
+  function forceTopOnce(){
+    // Remove qualquer #hash da URL: evita que o navegador tente rolar até
+    // uma âncora antiga assim que as imagens grandes terminarem de carregar
+    // e a altura da página mudar.
+    if (location.hash && history.replaceState) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    window.scrollTo(0, 0);
+  }
+  forceTopOnce();
+  window.addEventListener("pageshow", forceTopOnce);
+  window.addEventListener("load", forceTopOnce);
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible") forceTopOnce();
+  });
 </script>
